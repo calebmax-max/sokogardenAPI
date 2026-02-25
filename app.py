@@ -40,7 +40,7 @@ def signup():
 
         #by use of the cursor execute the sql as you replace the placeholders with the actual values
         cursor.execute(sql, data)
-
+ 
         # commit the changes to the database
         connection.commit()
 
