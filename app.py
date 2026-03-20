@@ -1,12 +1,14 @@
 # Import flask and its components
 from flask import *
 import os
-
+from flask_cors import CORS
+#  CORS = cross origin resource sharing
 # import the pymysql module - It helps us to create a connection between python flask and mysql database
 import pymysql
 
 # Create a flask application and give it a name
 app = Flask(__name__)
+CORS(app)
 
 # configure the location where your product images will be savedon your application
 app.config["UPLOAD_FOLDER"] = "static/images"
@@ -26,7 +28,7 @@ def signup():
         # print(username, email, password, phone)
 
         # establish a connection between flask/python and mysql
-        connection = pymysql.connect(host="localhost", user="root", password="", database="sokogardenonline")
+        connection = pymysql.connect(host="mysql-calebtonny.alwaysdata.net", user="calebtonny", password="modcom1234", database="calebtonny_sokogarden")
 
         # create a cursor to execute the sql queries
         cursor = connection.cursor()
@@ -60,7 +62,7 @@ def signin():
 
        print(email,password)
     #    return jsonify({"message" : "Signin route accessed"})
-       connection = pymysql.connect(host="localhost", user="root", password="", database="sokogardenonline")
+       connection = pymysql.connect(host="mysql-calebtonny.alwaysdata.net", user="calebtonny", password="modcom1234", database="calebtonny_sokogarden")
         # create a cursor to execute the sql queries
        cursor = connection.cursor(pymysql.cursors.DictCursor)
        sql ="SELECT * FROM users WHERE email = %s AND password = %s"
@@ -79,6 +81,36 @@ def signin():
            user = cursor.fetchone()
         #return the deatils to the front-end as welll as a message
            return jsonify({"message" : "User signed up successfully","user":user})
+       
+@app.route("/api/event_bookings", methods= ["POST"])
+def eventbookings():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        phone = request.form["phone"]
+        event_date = request.form["event_date"]
+        event_type = request.form["event_type"]
+        guests  = request.form["guests"]
+
+
+
+
+    
+
+
+
+
+        connection = pymysql.connect(host="mysql-calebtonny.alwaysdata.net", user="calebtonny", password="modcom1234", database="calebtonny_sokogarden")
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        sql="INSERT INTO event_bookings(name, email, phone, event_date, event_type, guests) VALUES(%s, %s, %s, %s, %s,%s)"
+        data = (name,email, phone, event_date, event_type, guests)
+        cursor.execute(sql,data)
+         
+        connection.commit()
+
+    return jsonify({"message" : "successful"})
+
        
 
 
@@ -109,7 +141,7 @@ def Addproducts():
         #print(product_name, product_description,product_cost,product_photo)
 
         # establish a connection to the db 
-        connection = pymysql.connect(host="localhost", user="root", password="",database="sokogardenonline")
+        connection = pymysql.connect(host="mysql-calebtonny.alwaysdata.net", user="calebtonny", password="modcom1234",database="calebtonny_sokogarden")
         # create a cursor
         cursor = connection.cursor()
 
@@ -143,7 +175,7 @@ def Addproducts():
 @app.route("/api/get_products") 
 def get_products():
         # create a connection to the DB
-        connection = pymysql.connect(host="localhost", user="root", password="",database="sokogardenonline")
+        connection = pymysql.connect(host="mysql-calebtonny.alwaysdata.net", user="calebtonny", password="modcom1234",database="calebtonny_sokogarden")
 
         # create a cursor
         cursor = connection.cursor(pymysql.cursors.DictCursor )
@@ -223,4 +255,4 @@ def mpesa_payment():
 
 
 # Run the application  
-app.run(debug=True)
+# app.run(debug=True)
